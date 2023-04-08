@@ -19,5 +19,9 @@
     "pug": "^3.0.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "csv-writer": "^1.6.0"
   }
 }

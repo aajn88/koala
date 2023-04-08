@@ -8,3 +8,18 @@ table
       tr
         each val in row
           td= val
+  tfoot
+    tr
+      form(action="", method="POST")
+        td
+          input(type="text", name="command" autocomplete="off")
+        td
+          input(type="text", name="name" autocomplete="off")
+        td
+          input(type="text", name="description" autocomplete="off")
+        td
+          input(type="text", name="emptyAction" autocomplete="off")
+        td
+          input(type="text", name="actionWithArguments" autocomplete="off")
+        td
+          button(type="submit" autocomplete="off") Add Command
