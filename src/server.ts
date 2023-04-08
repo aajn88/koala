@@ -1,5 +1,5 @@
 import express from "express";
-import { readCommandsFile } from "./commands/commands_reader";
+import { readCommandsFile, saveNewCommand } from "./commands/commands_reader";
 import { Command } from "./commands/command";
 import pug from "pug";
 import bodyParser from "body-parser";
@@ -15,15 +15,19 @@ interface Commands {
 
 const commands: Commands = {};
 
-readCommandsFile()
-  .then((data: Command[]) => {
-    data.forEach((command) => {
-      commands[command.command] = command;
+function refreshCommands(): void {
+  readCommandsFile()
+    .then((data: Command[]) => {
+      data.forEach((command) => {
+        commands[command.command] = command;
+      });
+    })
+    .catch((error: Error) => {
+      console.error(error);
     });
-  })
-  .catch((error: Error) => {
-    console.error(error);
-  });
+}
+
+refreshCommands();
 
 app.get("/", (req, res) => {
   const q = req.query.q as string;
@@ -69,13 +73,15 @@ app.get("/koala", (req, res) => {
 
 app.post("/koala", (req, res) => {
   const command = req.body.command;
-  commands[command] = {
+  const newCommand = {
     command: command,
     name: req.body.name,
     description: req.body.description,
     emptyAction: req.body.emptyAction,
     actionWithArguments: req.body.actionWithArguments,
   };
+  saveNewCommand(newCommand);
+  refreshCommands();
   res.redirect("/koala");
 });
 

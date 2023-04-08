@@ -20,23 +20,13 @@ export function readCommandsFile(): Promise<Command[]> {
   });
 }
 
-export function saveNewCommand(newCommand: Command): void {
-  const csvWriter = createObjectCsvWriter({
-    path: commandsPath,
-    header: [
-      { id: "command", title: "command" },
-      { id: "name", title: "name" },
-      { id: "description", title: "description" },
-      { id: "emptyAction", title: "emptyAction" },
-      { id: "actionWithArguments", title: "actionWithArguments" },
-    ],
-  });
-  csvWriter
-    .writeRecords([newCommand])
-    .then(() => {
-      console.log("New record added to the CSV file");
-    })
-    .catch((err) => {
+export function saveNewCommand(cmd: Command): void {
+  const csvLine = `${cmd.command},${cmd.name},${cmd.description},${cmd.emptyAction},${cmd.actionWithArguments}\n`;
+  fs.appendFile(commandsPath, csvLine, (err) => {
+    if (err) {
       console.error(err);
-    });
+    } else {
+      console.log("New record added to the CSV file");
+    }
+  });
 }
