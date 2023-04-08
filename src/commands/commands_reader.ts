@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs, { NoParamCallback } from "fs";
 import csv from "csv-parser";
 import { createObjectCsvWriter } from "csv-writer";
 import { Command } from "./command";
@@ -20,13 +20,7 @@ export function readCommandsFile(): Promise<Command[]> {
   });
 }
 
-export function saveNewCommand(cmd: Command): void {
+export function saveNewCommand(cmd: Command, callback: NoParamCallback): void {
   const csvLine = `${cmd.command},${cmd.name},${cmd.description},${cmd.emptyAction},${cmd.actionWithArguments}\n`;
-  fs.appendFile(commandsPath, csvLine, (err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log("New record added to the CSV file");
-    }
-  });
+  fs.appendFile(commandsPath, csvLine, callback);
 }

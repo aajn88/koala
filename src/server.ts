@@ -80,9 +80,15 @@ app.post("/koala", (req, res) => {
     emptyAction: req.body.emptyAction,
     actionWithArguments: req.body.actionWithArguments,
   };
-  saveNewCommand(newCommand);
-  refreshCommands();
-  res.redirect("/koala");
+  saveNewCommand(newCommand, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log("New record added to the CSV file");
+    }
+    refreshCommands();
+    res.redirect("/koala");
+  });
 });
 
 app.listen(port, () => {
