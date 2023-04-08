@@ -34,6 +34,13 @@ app.get("/", (req, res) => {
   const query_split = q.split(" ");
   const cmd_str = query_split[0];
   const cmd = commands[cmd_str];
+
+  // Uses google by default if not command found
+  if (cmd == undefined) {
+    res.redirect(commands["g"].actionWithArguments.replace("%s", q));
+    return;
+  }
+
   if (query_split.length > 1) {
     const real_query = q.substring(cmd_str.length + 1); // including the space
     const encoded_query = encodeURIComponent(real_query);
