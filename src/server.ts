@@ -4,19 +4,26 @@ import { CommandRow, readCsvFile } from './commands/commands_reader';
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
-    readCsvFile('src/commands/commands_list.csv')
-        .then((data: CommandRow[]) => {
-            console.log(data);
-            // Do something with the parsed CSV data here
-        })
-        .catch((error: Error) => {
-            console.error(error);
-            // Handle the error here
-        });
+interface Commands {
+    [key: string]: CommandRow;
+}
 
-    const q = req.query.q || 'World';
-    res.send(`Hello, ${q}!`);
+const commands: Commands = {};
+
+readCsvFile('src/commands/commands_list.csv')
+    .then((data: CommandRow[]) => {
+        data.forEach((command) => {
+            commands[command.command] = command;
+        });
+    })
+    .catch((error: Error) => {
+        console.error(error);
+    });
+
+app.get('/', (req, res) => {
+    const q = req.query.q as string;
+    const url = commands[q].emptyAction;
+    res.redirect(url);
 });
 
 app.listen(port, () => {
