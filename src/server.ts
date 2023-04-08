@@ -1,7 +1,7 @@
 import express from 'express';
 import { readCsvFile } from './commands/commands_reader';
 import { Command } from './commands/command';
-const pug = require('pug');
+import pug from 'pug';
 
 
 const app = express();
