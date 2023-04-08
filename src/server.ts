@@ -25,8 +25,16 @@ readCsvFile('src/commands/commands_list.csv')
 
 app.get('/', (req, res) => {
     const q = req.query.q as string;
-    const url = commands[q].emptyAction;
-    res.redirect(url);
+    const query_split = q.split(' ');
+    const cmd_str = query_split[0];
+    const cmd = commands[cmd_str];
+    if (query_split.length > 1) {
+        const real_query = q.substring(cmd_str.length + 1); // including the space
+        const encoded_query = encodeURIComponent(real_query);
+        res.redirect(cmd.actionWithArguments.replace('%s', encoded_query));
+    } else {
+        res.redirect(cmd.emptyAction);
+    }
 });
 
 app.get('/koala', (req, res) => {
@@ -36,7 +44,7 @@ app.get('/koala', (req, res) => {
     Object.values(commands).forEach((cmd: Command) => {
         rows.push([cmd.command, cmd.name, cmd.description, cmd.emptyAction, cmd.actionWithArguments]);
     });
-    
+
     const html = template({
         cols: ['Command', 'Name', 'Description', 'Empty Action', 'Action with Arguments'], rows: rows
     });
