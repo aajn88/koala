@@ -1,4 +1,5 @@
 command,name,description,emptyAction,actionWithArguments
+koala,"Koala UI","Access to Koala's list of commands","/koala","/koala"
 g,"Google","Google it!",https://www.google.com/,https://www.google.com/search?q=%s
 gm,"Google Maps","Quick access to google maps search",https://www.google.com/maps,https://www.google.com/maps/search/%s
 yt,"Youtube","Quick access to Youtube search",https://www.youtube.com/,https://www.youtube.com/results?search_query=%s

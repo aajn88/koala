@@ -1,20 +1,13 @@
 import fs from 'fs';
 import csv from 'csv-parser';
+import { Command } from './command';
 
-export interface CommandRow {
-    command: string;
-    name: string;
-    description: string;
-    emptyAction: string;
-    actionWithArguments: string;
-}
-
-export function readCsvFile(filePath: string): Promise<CommandRow[]> {
+export function readCsvFile(filePath: string): Promise<Command[]> {
     return new Promise((resolve, reject) => {
-        const results: CommandRow[] = [];
+        const results: Command[] = [];
         fs.createReadStream(filePath)
             .pipe(csv())
-            .on('data', (data: CommandRow) => results.push(data))
+            .on('data', (data: Command) => results.push(data))
             .on('end', () => {
                 resolve(results);
             })
