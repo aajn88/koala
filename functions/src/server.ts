@@ -3,9 +3,12 @@ import { readCommandsFile, saveNewCommand } from "./commands/commands_reader";
 import { Command } from "./commands/command";
 import pug from "pug";
 import bodyParser from "body-parser";
+import * as dotenv from "dotenv";
 
-const isProd = process.env.PROD_ENV;
-const app = express();
+dotenv.config();
+
+const isProd = process.env.NODE_ENV == "prod";
+export const app = express();
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -61,7 +64,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/koala", (req, res) => {
-  const template = pug.compileFile("src/template/table.pug");
+  let templateFile = "src/template/table.pug";
+  if (!isProd) {
+    templateFile = "functions/" + templateFile;
+  }
+  const template = pug.compileFile(templateFile);
 
   const rows: string[][] = [];
   Object.values(commands).forEach((cmd: Command) => {
@@ -90,8 +97,8 @@ app.get("/koala", (req, res) => {
 });
 
 app.post("/koala", (req, res) => {
-  if(isProd) {
-    throw new Error('Operation not allowed in prod');
+  if (isProd) {
+    throw new Error("Operation not allowed in prod");
   }
 
   const command = req.body.command;
