@@ -4,6 +4,7 @@ import { Command } from "./commands/command";
 import pug from "pug";
 import bodyParser from "body-parser";
 
+const isProd = process.env.PROD_ENV;
 const app = express();
 const port = 3000;
 
@@ -82,12 +83,17 @@ app.get("/koala", (req, res) => {
       "Action with Arguments",
     ],
     rows: rows,
+    showForm: !isProd,
   });
 
   res.send(html);
 });
 
 app.post("/koala", (req, res) => {
+  if(isProd) {
+    throw new Error('Operation not allowed in prod');
+  }
+
   const command = req.body.command;
   const newCommand = {
     command: command,
