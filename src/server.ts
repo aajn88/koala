@@ -15,15 +15,24 @@ interface Commands {
 
 const commands: Commands = {};
 
-function refreshCommands(): void {
+function refreshCommands(
+  onComplete?: () => void,
+  onError?: (error: Error) => void
+): void {
   readCommandsFile()
     .then((data: Command[]) => {
       data.forEach((command) => {
         commands[command.command] = command;
       });
+      if (onComplete) {
+        onComplete();
+      }
     })
     .catch((error: Error) => {
       console.error(error);
+      if (onError) {
+        onError(error);
+      }
     });
 }
 
@@ -93,8 +102,14 @@ app.post("/koala", (req, res) => {
     } else {
       console.log("New record added to the CSV file");
     }
-    refreshCommands();
-    res.redirect("/koala");
+    refreshCommands(
+      () => {
+        res.redirect("/koala");
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   });
 });
 
