@@ -31,7 +31,7 @@ npm install && npm install -g pm2 && pm2 start npm --name koala -- start
 To stop it simply run from terminal `pm2 stop koala`.
 To start it again just run `pm2 start npm --name koala -- start`.
 
-## Configure Chrome (and keep still Google!) 🌐
+## Configure Chrome (and still keep Google!) 🌐
 
 We all love Google. Don't worry. **If we don't recognize the command we just Google it by default**. However, to use Koala and keep Google suggestions, follow these steps:
 
