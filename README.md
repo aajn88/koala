@@ -17,7 +17,7 @@ Just type `koala` and you'll be able to see all commands. If you want to add one
 
 ## Commands with arguments 🚀
 
-If you want to add your own parameters, just add `%s` where the parameter needs to be present. We will handle the encoding 😉
+If you want to add your own parameters, just add `%s` where the parameter needs to be present. Koala will handle the encoding automatically 😉
 
 # Installation 💻
 From terminal:
@@ -33,7 +33,7 @@ To start it again just run `pm2 start npm --name koala -- start`.
 
 ## Configure Chrome (and still keep Google!) 🌐
 
-We all love Google. Don't worry. **If we don't recognize the command we just Google it by default**. However, to use Koala and keep Google suggestions, follow these steps:
+We all love Google. Don't worry. **If Koala doesn't recognize the command then it'll just Google it by default**. However, to use Koala and keep Google suggestions, follow these steps:
 
 https://user-images.githubusercontent.com/5447552/230739462-514c8472-d511-4eea-8c42-bfb225cc8e72.mp4
 
