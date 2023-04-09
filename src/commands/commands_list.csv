@@ -4,6 +4,7 @@ g,"Google","Google it!",https://www.google.com/,https://www.google.com/search?q=
 gi,Google Images,Search using using Google Images,http://images.google.com/images,http://images.google.com/images?q=%s
 gm,"Google Maps","Quick access to google maps search",https://www.google.com/maps,https://www.google.com/maps/search/%s
 yt,"Youtube","Quick access to Youtube search",https://www.youtube.com/,https://www.youtube.com/results?search_query=%s
-tr,Google Translate,Translate from English to Spanish,https://translate.google.com,https://translate.google.com/?sl=en&tl=es&text=%s&op=translate
+tr,Google Translate,Translate from English to Spanish,https://translate.google.com/?sl=en&tl=es&op=translate,https://translate.google.com/?sl=en&tl=es&text=%s&op=translate
 gpt,ChatGPT,Quick access to ChatGPT,https://chat.openai.com/,https://chat.openai.com/
 dalle,DALL·E,DALL·E playground,https://labs.openai.com/,https://labs.openai.com/
+trs,Google Translate from spanish,GTranslate from Spanish to English,https://translate.google.com/?sl=es&tl=en&op=translate,https://translate.google.com/?sl=es&tl=en&text=%s&op=translate
