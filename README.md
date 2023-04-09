@@ -37,8 +37,8 @@ We all love Google. Don't worry. **If Koala doesn't recognize the command then i
 
 https://user-images.githubusercontent.com/5447552/230739462-514c8472-d511-4eea-8c42-bfb225cc8e72.mp4
 
-1. Setup Koala as your default engine (don't worry, you'll keep Google! Any non-existent command will be Googled)
-  1. Add any name and shortcut you want but make sure the URL is `http://localhost:3000/?q=%s`
-  1. Make the default search engine
-1. Change google to have shortcut as `g`
-1. Voilá. You can now search with Koala, if you need google, just type `g` followed by a space
+1. Setup Koala as your default engine (don't worry, you'll keep Google! Any non-existent command will be Googled).
+  1. Add any name and shortcut you want but make sure the URL is `http://localhost:3000/?q=%s`.
+  1. Make Koala the default search engine.
+1. Change Google to have shortcut as `g`.
+1. Voilá. You can now search with Koala, if you need google suggestions, just type `g` followed by a space.
