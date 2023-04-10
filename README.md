@@ -13,14 +13,17 @@ Just type one of the supported commands with or without parameters to quickly ac
 
 https://user-images.githubusercontent.com/5447552/230737872-2cd37dbf-29d9-413b-a5fd-106952a42125.mp4
 
-Just type `koala` and you'll be able to see all commands. If you want to add one, just add it!
+Just type `koala` and you'll be able to see all commands. If you want to add one, just add it! (If you're using a local server)
 
 ## Commands with arguments 🚀
 
 If you want to add your own parameters, just add `%s` where the parameter needs to be present. Koala will handle the encoding automatically 😉
 
-# Installation 💻
-From terminal:
+# Installation 💻 (Optional)
+
+> :warning: Now you don't need to install the server if you want to use Koala. Skip this step and go to next section if you just want to use the default commands. Keep reading if you want to be able to add your own commands.
+
+This installation will allow you to create your local server and be able to add custom commands to Koala:
 1. `git clone https://github.com/aajn88/koala.git`
 1. `cd koala`
 1. Install & run:
@@ -38,7 +41,7 @@ We all love Google. Don't worry. **If Koala doesn't recognize the command then i
 https://user-images.githubusercontent.com/5447552/230739462-514c8472-d511-4eea-8c42-bfb225cc8e72.mp4
 
 1. Setup Koala as your default engine (don't worry, you'll keep Google! Any non-existent command will be Googled).
-  1. Add any name and shortcut you want but make sure the URL is `http://localhost:3000/?q=%s`.
+  1. Add any name and shortcut you want but make sure the URL is `https://us-central1-koala-search.cloudfunctions.net/koalapp?q=%s` (or `http://localhost:3000/?q=%s` if you're using your own server).
   1. Make Koala the default search engine.
 1. Change Google to have shortcut as `g`.
 1. Voilá. You can now search with Koala, if you need google suggestions, just type `g` followed by a space.
