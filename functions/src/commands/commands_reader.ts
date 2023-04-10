@@ -1,16 +1,9 @@
 import fs, { NoParamCallback } from "fs";
 import csv from "csv-parser";
 import { Command } from "./command";
-import * as dotenv from "dotenv";
+import { getAssetUri } from "../environment/environment";
 
-dotenv.config();
-
-const isProd = process.env.NODE_ENV == "prod";
-
-let commandsPath = "src/commands/commands_list.csv";
-if (!isProd) {
-  commandsPath = "functions/" + commandsPath;
-}
+const commandsPath = getAssetUri("commands_list.csv");
 
 export function readCommandsFile(): Promise<Command[]> {
   return new Promise((resolve, reject) => {

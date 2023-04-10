@@ -1,75 +1,33 @@
 import express from "express";
-import { readCommandsFile, saveNewCommand } from "./commands/commands_reader";
 import { Command } from "./commands/command";
 import pug from "pug";
 import bodyParser from "body-parser";
-import * as dotenv from "dotenv";
+import { getAssetUri, isProd } from "./environment/environment";
+import {
+  createNewAction,
+  getCommands,
+  processQuery,
+  refreshCommands,
+} from "./commands/commands_manager";
 
-dotenv.config();
-
-const isProd = process.env.NODE_ENV == "prod";
 export const app = express();
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-interface Commands {
-  [key: string]: Command;
-}
-
-const commands: Commands = {};
-
-function refreshCommands(
-  onComplete?: () => void,
-  onError?: (error: Error) => void
-): void {
-  readCommandsFile()
-    .then((data: Command[]) => {
-      data.forEach((command) => {
-        commands[command.command] = command;
-      });
-      if (onComplete) {
-        onComplete();
-      }
-    })
-    .catch((error: Error) => {
-      console.error(error);
-      if (onError) {
-        onError(error);
-      }
-    });
-}
-
 refreshCommands();
 
 app.get("/", (req, res) => {
   const q = req.query.q as string;
-  const query_split = q.split(" ");
-  const cmd_str = query_split[0];
-  const cmd = commands[cmd_str];
-
-  // Uses google by default if not command found
-  if (cmd == undefined) {
-    res.redirect(commands["g"].actionWithArguments.replace("%s", q));
-    return;
-  }
-
-  if (query_split.length > 1) {
-    const real_query = q.substring(cmd_str.length + 1); // including the space
-    const encoded_query = encodeURIComponent(real_query);
-    res.redirect(cmd.actionWithArguments.replace("%s", encoded_query));
-  } else {
-    res.redirect(cmd.emptyAction);
-  }
+  const url = processQuery(q);
+  res.redirect(url);
 });
 
-app.get("/koala", (req, res) => {
-  let templateFile = "src/template/table.pug";
-  if (!isProd) {
-    templateFile = "functions/" + templateFile;
-  }
+app.get("/koala", (_req, res) => {
+  const templateFile = getAssetUri("table.pug");
   const template = pug.compileFile(templateFile);
 
+  const commands = getCommands();
   const rows: string[][] = [];
   Object.values(commands).forEach((cmd: Command) => {
     rows.push([
@@ -97,10 +55,6 @@ app.get("/koala", (req, res) => {
 });
 
 app.post("/koala", (req, res) => {
-  if (isProd) {
-    throw new Error("Operation not allowed in prod");
-  }
-
   const command = req.body.command;
   const newCommand = {
     command: command,
@@ -109,20 +63,12 @@ app.post("/koala", (req, res) => {
     emptyAction: req.body.emptyAction,
     actionWithArguments: req.body.actionWithArguments,
   };
-  saveNewCommand(newCommand, (err) => {
+  createNewAction(newCommand, (err) => {
     if (err) {
-      console.error(err);
+      res.send(err);
     } else {
-      console.log("New record added to the CSV file");
+      res.redirect("/koala");
     }
-    refreshCommands(
-      () => {
-        res.redirect("/koala");
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
   });
 });
 

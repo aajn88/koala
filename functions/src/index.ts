@@ -1,4 +1,4 @@
 import * as functions from "firebase-functions";
 import { app } from "./server";
 
-export const webapp = functions.https.onRequest(app);
+export const koalapp = functions.https.onRequest(app);

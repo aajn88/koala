@@ -3,7 +3,7 @@
     {
       "source": "functions",
       "codebase": "default",
-      "function": "webapp",
+      "function": "koalapp",
       "ignore": [
         "node_modules",
         ".git",
@@ -11,7 +11,6 @@
         "firebase-debug.*.log"
       ],
       "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
         "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
