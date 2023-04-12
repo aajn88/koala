@@ -2,7 +2,7 @@ import express from "express";
 import { Command } from "./commands/command";
 import pug from "pug";
 import bodyParser from "body-parser";
-import { getAssetUri, isProd } from "./environment/environment";
+import { adaptUrlToEnv, getAssetUri } from "./environment/environment";
 import {
   createNewAction,
   getCommands,
@@ -12,6 +12,7 @@ import {
 import {
   authenticateToken,
   generateAccessToken,
+  getLoggedInUser,
   maxExpiresInSecs,
 } from "./auth/auth_manager";
 import cookieParser from "cookie-parser";
@@ -30,7 +31,7 @@ app.get("/", (req, res) => {
   res.redirect(url);
 });
 
-app.get("/koala", authenticateToken, (_req, res) => {
+app.get("/koala", (req, res) => {
   const templateFile = getAssetUri("table.pug");
   const template = pug.compileFile(templateFile);
 
@@ -45,6 +46,7 @@ app.get("/koala", authenticateToken, (_req, res) => {
       cmd.actionWithArguments,
     ]);
   });
+  const user = getLoggedInUser(req);
 
   const html = template({
     cols: [
@@ -55,13 +57,13 @@ app.get("/koala", authenticateToken, (_req, res) => {
       "Action with Arguments",
     ],
     rows: rows,
-    showForm: !isProd,
+    user: user,
   });
 
   res.send(html);
 });
 
-app.post("/koala", (req, res) => {
+app.post("/koala", authenticateToken, (req, res) => {
   const command = req.body.command;
   const newCommand = {
     command: command,
@@ -74,17 +76,29 @@ app.post("/koala", (req, res) => {
     if (err) {
       res.send(err);
     } else {
-      res.redirect("/koala");
+      res.redirect(adaptUrlToEnv("/koala"));
     }
   });
 });
 
-app.post("/sign-up", (req, res) => {
-  console.log(req.body.username);
+app.post("/log-in", (req, res) => {
   const token = generateAccessToken(req.body.username);
-  console.log(token);
   res.cookie("jwt", token, { httpOnly: true, maxAge: maxExpiresInSecs * 1000 });
-  res.json({ message: "Signed up successfully" });
+  res.redirect(adaptUrlToEnv("/koala"));
+});
+
+app.post("/sign-up", (req, res) => {
+  const token = generateAccessToken(req.body.username);
+  res.cookie("jwt", token, { httpOnly: true, maxAge: maxExpiresInSecs * 1000 });
+  res.redirect(adaptUrlToEnv("/koala"));
+});
+
+app.post("/log-out", authenticateToken, (_req, res) => {
+  // Clear the JWT cookie by setting its expiration time to a past date
+  res.cookie("jwt", "", { expires: new Date(0) });
+
+  // Send a response back to the client
+  res.redirect(adaptUrlToEnv("/koala"));
 });
 
 app.listen(port, () => {
