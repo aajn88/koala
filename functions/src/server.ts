@@ -9,11 +9,18 @@ import {
   processQuery,
   refreshCommands,
 } from "./commands/commands_manager";
+import {
+  authenticateToken,
+  generateAccessToken,
+  maxExpiresInSecs,
+} from "./auth/auth_manager";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 refreshCommands();
 
@@ -23,7 +30,7 @@ app.get("/", (req, res) => {
   res.redirect(url);
 });
 
-app.get("/koala", (_req, res) => {
+app.get("/koala", authenticateToken, (_req, res) => {
   const templateFile = getAssetUri("table.pug");
   const template = pug.compileFile(templateFile);
 
@@ -70,6 +77,14 @@ app.post("/koala", (req, res) => {
       res.redirect("/koala");
     }
   });
+});
+
+app.post("/sign-up", (req, res) => {
+  console.log(req.body.username);
+  const token = generateAccessToken(req.body.username);
+  console.log(token);
+  res.cookie("jwt", token, { httpOnly: true, maxAge: maxExpiresInSecs * 1000 });
+  res.json({ message: "Signed up successfully" });
 });
 
 app.listen(port, () => {

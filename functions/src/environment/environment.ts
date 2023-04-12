@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+export const authenticationSecret = process.env.TOKEN_SECRET as string;
 export const nodeEnv = process.env.NODE_ENV;
 export const isProd = nodeEnv == "prod";
 
