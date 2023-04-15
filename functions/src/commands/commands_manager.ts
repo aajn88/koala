@@ -1,6 +1,6 @@
-import { adaptUrlToEnv, isProd } from "../environment/environment";
-import { Command } from "./command";
-import { readCommandsFile, saveNewCommand } from "./commands_reader";
+import { adaptUrlToEnv, isProd } from "../environment/environment.js";
+import { Command } from "./command.js";
+import { readCommandsFile, saveNewCommand } from "./commands_reader.js";
 
 interface Commands {
   [key: string]: Command;

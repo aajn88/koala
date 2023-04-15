@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node ./functions/src/server.ts"
+    "start": "nodemon --exec ts-node --esm ./functions/src/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^18.15.11",
@@ -24,6 +25,7 @@
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "csv-writer": "^1.6.0",
+    "firebase-admin": "^11.6.0",
     "jsonwebtoken": "^9.0.0"
   }
 }

@@ -1,20 +1,20 @@
 import express from "express";
-import { Command } from "./commands/command";
+import { Command } from "./commands/command.js";
 import pug from "pug";
 import bodyParser from "body-parser";
-import { adaptUrlToEnv, getAssetUri } from "./environment/environment";
+import { adaptUrlToEnv, getAssetUri } from "./environment/environment.js";
 import {
   createNewAction,
   getCommands,
   processQuery,
   refreshCommands,
-} from "./commands/commands_manager";
+} from "./commands/commands_manager.js";
 import {
   authenticateToken,
   generateAccessToken,
   getLoggedInUser,
   maxExpiresInSecs,
-} from "./auth/auth_manager";
+} from "./auth/auth_manager.js";
 import cookieParser from "cookie-parser";
 
 export const app = express();

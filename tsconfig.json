@@ -1,15 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "target": "es2017",
+    "module": "es2022",
     "outDir": "./dist",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext"
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "functions/src/**/*"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["functions/src/**/*"]
 }

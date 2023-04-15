@@ -1,7 +1,7 @@
 import fs, { NoParamCallback } from "fs";
 import csv from "csv-parser";
-import { Command } from "./command";
-import { getAssetUri } from "../environment/environment";
+import { Command } from "./command.js";
+import { getAssetUri } from "../environment/environment.js";
 
 const commandsPath = getAssetUri("commands_list.csv");
 

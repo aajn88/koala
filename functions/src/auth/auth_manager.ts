@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { authenticationSecret } from "../environment/environment";
+import { authenticationSecret } from "../environment/environment.js";
 
 export const maxExpiresInSecs = 31536000; // 1y
 
