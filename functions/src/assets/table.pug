@@ -8,20 +8,21 @@ table
       tr
         each val in row
           td= val
-  tfoot
-    include auth.pug
+  if showLogin
+    tfoot
+      include auth.pug
   if user
     tr
-      form(action="", method="POST")
+      form(action="" method="POST")
         td
-          input(type="text", name="command" autocomplete="off")
+          input(type="text" name="command" autocomplete="off")
         td
-          input(type="text", name="name" autocomplete="off")
+          input(type="text" name="name" autocomplete="off")
         td
-          input(type="text", name="description" autocomplete="off")
+          input(type="text" name="description" autocomplete="off")
         td
-          input(type="text", name="emptyAction" autocomplete="off")
+          input(type="text" name="emptyAction" autocomplete="off")
         td
-          input(type="text", name="actionWithArguments" autocomplete="off")
+          input(type="text" name="actionWithArguments" autocomplete="off")
         td
           button(type="submit" autocomplete="off") Add Command

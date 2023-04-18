@@ -8,10 +8,15 @@ interface Commands {
 
 const defaultCommand = "g";
 
+const defaultCommands: Command[] = await readCommandsFile();
 const commands: Commands = {};
 
 export function getCommands(): Commands {
   return commands;
+}
+
+export function getDefaultCommands(): Command[] {
+  return defaultCommands;
 }
 
 export function refreshCommands(onComplete?: (error?: Error) => void): void {

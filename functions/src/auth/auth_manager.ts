@@ -1,14 +1,11 @@
 import jwt from "jsonwebtoken";
 import { authenticationSecret } from "../environment/environment.js";
+import { User } from "../db/user.js";
 
 export const maxExpiresInSecs = 31536000; // 1y
 
-export interface User {
-  username: string;
-}
-
-export function generateAccessToken(username: string): string {
-  return jwt.sign({ username: username }, authenticationSecret, {
+export function generateAccessToken(user: User): string {
+  return jwt.sign({ username: user.username }, authenticationSecret, {
     expiresIn: maxExpiresInSecs,
   });
 }

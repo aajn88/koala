@@ -8,3 +8,5 @@ tr,Google Translate,Translate from English to Spanish,https://translate.google.c
 gpt,ChatGPT,Quick access to ChatGPT,https://chat.openai.com/,https://chat.openai.com/
 dalle,DALL·E,DALL·E playground,https://labs.openai.com/,https://labs.openai.com/
 trs,Google Translate from spanish,GTranslate from Spanish to English,https://translate.google.com/?sl=es&tl=en&op=translate,https://translate.google.com/?sl=es&tl=en&text=%s&op=translate
+drive,Google Drive,Search on Google Drive,https://drive.google.com/,https://drive.google.com/drive/search?q=%s
+am,Amazon,Amazon,https://smile.amazon.co.uk/,https://www.amazon.co.uk/s?k=%s
