@@ -16,7 +16,7 @@ import {
   maxExpiresInSecs,
 } from "./auth/auth_manager.js";
 import cookieParser from "cookie-parser";
-import { loginUser } from "./db/db.js";
+import { loginUser, signupUser } from "./db/db.js";
 import { User } from "./db/user.js";
 import { log } from "./utils/logs.js";
 
@@ -61,6 +61,7 @@ app.get("/koala", (req, res) => {
     ],
     rows: rows,
     user: user,
+    showLogin: false,
   });
 
   res.send(html);
@@ -85,29 +86,31 @@ app.post("/koala", authenticateToken, (req, res) => {
 });
 
 app.post("/log-in", async (req, res) => {
-  log("log in");
   loginUser(req.body.username, req.body.password)
-    .then((user: User) => {
-      log("logged in");
-      const token = generateAccessToken(user);
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        maxAge: maxExpiresInSecs * 1000,
-      });
-      res.redirect(adaptUrlToEnv("/koala"));
-    })
+    .then((user: User) => processNewSession(res, user))
     .catch((err) => {
-      log("error");
       log(err);
       res.send(err);
     });
 });
 
 app.post("/sign-up", (req, res) => {
-  const token = generateAccessToken(req.body.username);
-  res.cookie("jwt", token, { httpOnly: true, maxAge: maxExpiresInSecs * 1000 });
-  res.redirect(adaptUrlToEnv("/koala"));
+  signupUser(req.body.username, req.body.password)
+    .then((user: User) => processNewSession(res, user))
+    .catch((err) => {
+      log(err);
+      res.send(err);
+    });
 });
+
+function processNewSession(res: any, user: User): void {
+  const token = generateAccessToken(user);
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    maxAge: maxExpiresInSecs * 1000,
+  });
+  res.redirect(adaptUrlToEnv("/koala"));
+}
 
 app.post("/log-out", authenticateToken, (_req, res) => {
   // Clear the JWT cookie by setting its expiration time to a past date
