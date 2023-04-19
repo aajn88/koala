@@ -8,12 +8,11 @@ table
       tr
         each val in row
           td= val
-  if showLogin
-    tfoot
-      include auth.pug
+  tfoot
+    include auth.pug
   if user
     tr
-      form(action="" method="POST")
+      form(action=envBaseURL method="POST")
         td
           input(type="text" name="command" autocomplete="off")
         td

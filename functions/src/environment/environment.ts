@@ -11,6 +11,9 @@ export function adaptUrlToEnv(url: string): string {
   if (url.startsWith("/")) {
     return envBaseURL + url;
   }
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    url = "https://" + url;
+  }
   return url;
 }
 

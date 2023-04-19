@@ -2,12 +2,16 @@ import express from "express";
 import { Command } from "./commands/command.js";
 import pug from "pug";
 import bodyParser from "body-parser";
-import { adaptUrlToEnv, getAssetUri } from "./environment/environment.js";
 import {
-  createNewAction,
+  adaptUrlToEnv,
+  envBaseURL,
+  getAssetUri,
+} from "./environment/environment.js";
+import {
   processQuery,
   genRefreshCommands,
   getCommands,
+  genCreateNewAction,
 } from "./commands/commands_manager.js";
 import {
   validateAuthentication,
@@ -15,6 +19,7 @@ import {
   generateAccessToken,
   maxExpiresInSecs,
   getLoggedInUser,
+  genClearSession,
 } from "./auth/auth_manager.js";
 import cookieParser from "cookie-parser";
 import { genLoginUser, genSignupUser } from "./db/db.js";
@@ -30,6 +35,7 @@ app.use(cookieParser());
 await genRefreshCommands();
 
 app.get("/", genAuthenticateUser, (req, res) => {
+  res.setHeader("Cache-Control", "no-cache");
   const q = req.query.q as string;
   const url = processQuery(q);
   res.redirect(url);
@@ -62,7 +68,8 @@ app.get("/koala", genAuthenticateUser, (_req, res) => {
     ],
     rows: rows,
     user: user,
-    showLogin: true,
+    showLogin: false,
+    envBaseURL: envBaseURL,
   });
 
   res.send(html);
@@ -77,13 +84,13 @@ app.post("/koala", genAuthenticateUser, validateAuthentication, (req, res) => {
     emptyAction: req.body.emptyAction,
     actionWithArguments: req.body.actionWithArguments,
   };
-  createNewAction(newCommand, (err) => {
-    if (err) {
-      res.send(err);
-    } else {
+  genCreateNewAction(newCommand)
+    .then(() => {
       res.redirect(adaptUrlToEnv("/koala"));
-    }
-  });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
 });
 
 app.post("/log-in", async (req, res) => {
@@ -117,9 +124,8 @@ app.post(
   "/log-out",
   genAuthenticateUser,
   validateAuthentication,
-  (_req, res) => {
-    // Clear the JWT cookie by setting its expiration time to a past date
-    res.cookie("jwt", "", { expires: new Date(0) });
+  async (_req, res) => {
+    await genClearSession(res);
 
     // Send a response back to the client
     res.redirect(adaptUrlToEnv("/koala"));

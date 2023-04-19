@@ -47,6 +47,20 @@ export async function genAuthenticateUser(req: any, res: any, next: any) {
   });
 }
 
+export async function genRefreshUser(): Promise<User> {
+  const loggedInUser = getLoggedInUser() as User;
+  currentUser = await genUser(loggedInUser.username);
+  await genRefreshCommands();
+  return currentUser as User;
+}
+
+export async function genClearSession(res: any): Promise<void> {
+  // Clear the JWT cookie by setting its expiration time to a past date
+  res.cookie("jwt", "", { expires: new Date(0) });
+  currentUser = undefined;
+  await genRefreshCommands();
+}
+
 export function getLoggedInUser(): User | undefined {
   return currentUser;
 }

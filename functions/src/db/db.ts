@@ -3,6 +3,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import { User } from "./user.js";
 import bcrypt from "bcrypt";
 import { getDefaultCommands } from "../commands/commands_manager.js";
+import { Command } from "../commands/command.js";
 
 initializeApp();
 
@@ -46,4 +47,13 @@ export async function genUser(username: string): Promise<User | undefined> {
     return undefined;
   }
   return userDoc.data() as User;
+}
+
+export async function genUpdateUserCommands(
+  user: User,
+  commands: Command[]
+): Promise<User> {
+  const userRef = db.collection("users").doc(user.username);
+  await userRef.update({ commands: commands });
+  return (await genUser(user.username)) as User;
 }

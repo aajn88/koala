@@ -1,7 +1,9 @@
-import { getLoggedInUser } from "../auth/auth_manager.js";
-import { adaptUrlToEnv, isProd } from "../environment/environment.js";
+import { genRefreshUser, getLoggedInUser } from "../auth/auth_manager.js";
+import { genUpdateUserCommands } from "../db/db.js";
+import { User } from "../db/user.js";
+import { adaptUrlToEnv } from "../environment/environment.js";
 import { Command } from "./command.js";
-import { readCommandsFile, saveNewCommand } from "./commands_reader.js";
+import { readCommandsFile } from "./commands_reader.js";
 
 interface Commands {
   [key: string]: Command;
@@ -62,23 +64,10 @@ function processCommand(
   }
 }
 
-export function createNewAction(
-  newCommand: Command,
-  onComplete: (err?: Error) => void
-): void {
-  if (isProd) {
-    onComplete(new Error("Operation not allowed in prod"));
-    return;
-  }
-  saveNewCommand(newCommand, (err) => {
-    if (err) {
-      console.error(err);
-      onComplete(err);
-      return;
-    }
-    console.log("New record added to the CSV file");
-    genRefreshCommands()
-      .then(() => onComplete())
-      .catch((err) => onComplete(err));
-  });
+export async function genCreateNewAction(newCommand: Command): Promise<void> {
+  let user = getLoggedInUser() as User;
+  const commands = user.commands;
+  commands.push(newCommand);
+  await genUpdateUserCommands(user, commands);
+  await genRefreshUser();
 }

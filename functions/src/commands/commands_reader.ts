@@ -1,4 +1,4 @@
-import fs, { NoParamCallback } from "fs";
+import fs from "fs";
 import csv from "csv-parser";
 import { Command } from "./command.js";
 import { getAssetUri } from "../environment/environment.js";
@@ -18,9 +18,4 @@ export async function readCommandsFile(): Promise<Command[]> {
         reject(error);
       });
   });
-}
-
-export function saveNewCommand(cmd: Command, callback: NoParamCallback): void {
-  const csvLine = `${cmd.command},${cmd.name},${cmd.description},${cmd.emptyAction},${cmd.actionWithArguments}\n`;
-  fs.appendFile(commandsPath, csvLine, callback);
 }

@@ -2,7 +2,7 @@ tr
   if user
     td(colspan="6")
       p Welcome #{user.username}!
-      form(action="/log-out" method="POST")
+      form(action=`${envBaseURL}/log-out` method="POST")
         button(type="submit") Log Out
   else
     td(colspan="6")
@@ -11,7 +11,7 @@ tr
       br
       br
       p Log in or sign up in order to add custom commands!
-      form(action="/log-in" method="POST")
+      form(action=`${envBaseURL}/log-in` method="POST")
         h2 Log In
         input(type="text" name="username" placeholder="Username" style="margin-right: 10px;")
         input(type="password" name="password" placeholder="Password" style="margin-right: 10px;")
