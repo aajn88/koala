@@ -20,6 +20,7 @@ import {
   maxExpiresInSecs,
   getLoggedInUser,
   genClearSession,
+  genRefreshUser,
 } from "./auth/auth_manager.js";
 import cookieParser from "cookie-parser";
 import { genLoginUser, genSignupUser } from "./db/db.js";
@@ -41,10 +42,12 @@ app.get("/", genAuthenticateUser, (req, res) => {
   res.redirect(url);
 });
 
-app.get("/koala", genAuthenticateUser, (_req, res) => {
+app.get("/koala", genAuthenticateUser, async (_req, res) => {
+  res.setHeader("Cache-Control", "no-cache");
   const templateFile = getAssetUri("table.pug");
   const template = pug.compileFile(templateFile);
 
+  await genRefreshUser();
   const commands = getCommands();
   const rows: string[][] = [];
   Object.values(commands).forEach((cmd: Command) => {

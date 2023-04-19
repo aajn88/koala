@@ -12,7 +12,7 @@ table
     include auth.pug
   if user
     tr
-      form(action=envBaseURL method="POST")
+      form(action=`${envBaseURL}/koala` method="POST")
         td
           input(type="text" name="command" autocomplete="off")
         td
