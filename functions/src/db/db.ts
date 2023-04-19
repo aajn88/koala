@@ -8,7 +8,7 @@ initializeApp();
 
 const db = getFirestore();
 
-export async function signupUser(
+export async function genSignupUser(
   username: string,
   password: string
 ): Promise<User> {
@@ -26,17 +26,24 @@ export async function signupUser(
   return user;
 }
 
-export async function loginUser(
+export async function genLoginUser(
   username: string,
   password: string
 ): Promise<User> {
-  const userDoc = await db.collection("users").doc(username).get();
-  if (!userDoc.exists) {
+  const user = await genUser(username);
+  if (!user) {
     throw new Error("Wrong username or password.");
   }
-  const user = userDoc.data() as User;
   if (await bcrypt.compare(password, user.password)) {
     return user;
   }
   throw new Error("Wrong username or password.");
+}
+
+export async function genUser(username: string): Promise<User | undefined> {
+  const userDoc = await db.collection("users").doc(username).get();
+  if (!userDoc.exists) {
+    return undefined;
+  }
+  return userDoc.data() as User;
 }

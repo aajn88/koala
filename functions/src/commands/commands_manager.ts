@@ -1,3 +1,4 @@
+import { getLoggedInUser } from "../auth/auth_manager.js";
 import { adaptUrlToEnv, isProd } from "../environment/environment.js";
 import { Command } from "./command.js";
 import { readCommandsFile, saveNewCommand } from "./commands_reader.js";
@@ -9,35 +10,29 @@ interface Commands {
 const defaultCommand = "g";
 
 const defaultCommands: Command[] = await readCommandsFile();
-const commands: Commands = {};
+let cachedCommands: Commands = {};
 
 export function getCommands(): Commands {
-  return commands;
+  return cachedCommands;
 }
 
 export function getDefaultCommands(): Command[] {
   return defaultCommands;
 }
 
-export function refreshCommands(onComplete?: (error?: Error) => void): void {
-  const onCompleteFunc = onComplete ?? function () {};
-  readCommandsFile()
-    .then((data: Command[]) => {
-      data.forEach((command) => {
-        commands[command.command] = command;
-      });
-      onCompleteFunc();
-    })
-    .catch((error: Error) => {
-      console.error(error);
-      onCompleteFunc(error);
-    });
+export async function genRefreshCommands(): Promise<void> {
+  const user = getLoggedInUser();
+  const readCommands = user ? user.commands : await readCommandsFile();
+  cachedCommands = {}; // Clear cached commands before inserting the new ones
+  readCommands.forEach((command) => {
+    cachedCommands[command.command] = command;
+  });
 }
 
 export function processQuery(q: string): string {
   const querySplit = q.split(" ");
   const cmd_str = querySplit[0];
-  const cmd = commands[cmd_str];
+  const cmd = cachedCommands[cmd_str];
 
   const url = processCommand(cmd, q, querySplit);
   return adaptUrlToEnv(url);
@@ -50,7 +45,7 @@ function processCommand(
 ): string {
   // Uses google by default if not command found
   if (cmd == undefined) {
-    return commands[defaultCommand].actionWithArguments.replace(
+    return cachedCommands[defaultCommand].actionWithArguments.replace(
       "%s",
       originalQuery
     );
@@ -82,6 +77,8 @@ export function createNewAction(
       return;
     }
     console.log("New record added to the CSV file");
-    refreshCommands(onComplete);
+    genRefreshCommands()
+      .then(() => onComplete())
+      .catch((err) => onComplete(err));
   });
 }
