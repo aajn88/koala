@@ -26,8 +26,10 @@ import cookieParser from "cookie-parser";
 import { genLoginUser, genSignupUser } from "./db/db.js";
 import { User } from "./db/user.js";
 import { log } from "./utils/logs.js";
+import favicon from "serve-favicon";
 
 export const app = express();
+app.use(favicon(getAssetUri("favicon.ico")));
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
