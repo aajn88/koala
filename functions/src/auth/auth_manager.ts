@@ -47,11 +47,13 @@ export async function genAuthenticateUser(req: any, res: any, next: any) {
   });
 }
 
-export async function genRefreshUser(): Promise<User> {
-  const loggedInUser = getLoggedInUser() as User;
+export async function genRefreshUser(): Promise<void> {
+  const loggedInUser = getLoggedInUser();
+  if (!loggedInUser) {
+    return;
+  }
   currentUser = await genUser(loggedInUser.username);
   await genRefreshCommands();
-  return currentUser as User;
 }
 
 export async function genClearSession(res: any): Promise<void> {

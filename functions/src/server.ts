@@ -27,9 +27,14 @@ import { genLoginUser, genSignupUser } from "./db/db.js";
 import { User } from "./db/user.js";
 import { log } from "./utils/logs.js";
 import favicon from "serve-favicon";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const app = express();
-app.use(favicon(getAssetUri("favicon.ico")));
+app.use(favicon(path.join(__dirname, "assets", "favicon.ico")));
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
